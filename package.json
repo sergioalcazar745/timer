@@ -12,6 +12,7 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.11.0",
+    "@mui/joy": "^5.0.0-alpha.61",
     "@mui/material": "^5.11.3",
     "axios": "^1.2.2",
     "material-icons": "^1.13.1",

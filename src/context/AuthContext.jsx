@@ -1,25 +1,39 @@
-import { createContext, useState } from "react"
+import { createContext, useEffect, useState } from "react"
 
 export const AuthContext = createContext();
 
 export function AuthContextProvider(props) {
 
   const [user, setUser] = useState(false)
+  const [page, setPage] = useState("Timer")
 
   const login = (token) => {
-    localStorage.setItem('tokenTimer', token)
+    localStorage.setItem('token', token)
     setUser(true)
   }
 
   const logout = () => {
-    localStorage.removeItem('tokenTimer')
+    localStorage.removeItem('token')
     setUser(false)
   }
 
+  const changePage = (name) => {
+    setPage(name)
+  }
+
+  useEffect(() => {
+    if(localStorage.getItem('token')){
+      setUser(true)
+    }
+  }, []);
+
   return (
     <AuthContext.Provider value={{
+      user,
       login,
-      logout
+      logout,
+      page,
+      changePage
     }}>
         {props.children}
     </AuthContext.Provider>
