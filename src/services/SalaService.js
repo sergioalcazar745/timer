@@ -1,9 +1,9 @@
 import Global from "./../Global";
 import axios from "axios";
 
-export default class EmpresaService{
+export default class SalaService{
 
-    getSalas(){
+    getAllSalas(){
         return new Promise(function(resolve) {
             var request = Global.url + "api/Salas";
 
@@ -13,7 +13,7 @@ export default class EmpresaService{
         });
     }
 
-    deletesala(id){
+    deleteSala(id){
         return new Promise(function(resolve){
             var request = Global.url + "api/Salas/" + id;
 
@@ -23,7 +23,7 @@ export default class EmpresaService{
         });
     }
 
-    postsala(nombre){
+    postSala(nombre){
         return new Promise(function(resolve){
             var request = Global.url + "api/salas/createsala/" + nombre;
 
@@ -33,7 +33,7 @@ export default class EmpresaService{
         });
     }
 
-    updatesala(id, nombre){
+    updateSala(id, nombre){
         return new Promise(function(resolve){
             var request = Global.url + "api/salas/updatesala/" + id + "/" + nombre;
             console.log(request)

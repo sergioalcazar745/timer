@@ -4,6 +4,7 @@ export default function useAlert() {
 
     //Context
     const [open, setOpen] = useState(false) 
+    const [message, setMessage] = useState("");
 
     const handleOpen = () => {
         setOpen(true)
@@ -13,9 +14,11 @@ export default function useAlert() {
         setOpen(false)
     } 
 
-    return (
+    return {
         open,
+        message,
+        setMessage,
         handleOpen,
         handleClose
-    )
+    }
 }

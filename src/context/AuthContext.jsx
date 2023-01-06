@@ -4,7 +4,7 @@ export const AuthContext = createContext();
 
 export function AuthContextProvider(props) {
 
-  const [user, setUser] = useState(false)
+  const [user, setUser] = useState(true)
   const [page, setPage] = useState("Timer")
 
   const login = (token) => {
@@ -22,8 +22,8 @@ export function AuthContextProvider(props) {
   }
 
   useEffect(() => {
-    if(localStorage.getItem('token')){
-      setUser(true)
+    if(!localStorage.getItem('token')){
+      setUser(false)
     }
   }, []);
 
