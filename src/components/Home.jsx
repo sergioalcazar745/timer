@@ -19,7 +19,6 @@ export default function Home() {
   //Context
   const authContext = useContext(AuthContext);
 
-  //Variable
   const open = true;
 
   //State

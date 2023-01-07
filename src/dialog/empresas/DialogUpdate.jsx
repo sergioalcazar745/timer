@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material'
 import React from 'react'
 
-export default function DialogUpdate({open, nombre, refc, handleClose, updateSala, deleteSala}) {
+export default function DialogUpdate({open, nombre, refc, handleClose, updateEmpresa, deleteEmpresa}) {
     return (
         <Dialog open={open} onClose={() => handleClose()}>
             <DialogTitle>Información</DialogTitle>
@@ -19,8 +19,8 @@ export default function DialogUpdate({open, nombre, refc, handleClose, updateSal
                 />
             </DialogContent>
             <DialogActions sx={{ justifyContent: 'space-around' }}>
-                <Button onClick={() => deleteSala()}>Eliminar</Button>
-                <Button onClick={() => updateSala()}>Actualizar</Button>
+                <Button onClick={() => deleteEmpresa()}>Eliminar</Button>
+                <Button onClick={() => updateEmpresa()}>Actualizar</Button>
             </DialogActions>
         </Dialog>
     )

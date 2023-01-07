@@ -36,7 +36,7 @@ export default class TemporizadorService{
     deleteTemporizador(id){
         return new Promise(function(resolve) {
             var request = Global.url + "api/timers/" + id;
-
+            console.log(id)
             axios.delete(request).then(response => {
                 resolve(response.data)
             });
