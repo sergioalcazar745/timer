@@ -1,5 +1,6 @@
 import {
   Backdrop,
+  Button,
   CircularProgress,
   List,
   ListItem,
@@ -11,9 +12,14 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import EventoService from "./../services/EventoService";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import ServiceTimerEventos from './../services/ServiceTiemposEventos'
 import { Link } from "react-router-dom";
+import io from "socket.io-client";
+
+const socket = io('http://localhost:4000/')
 
 const serviceEventos = new EventoService();
+const serviceTimerEventos = new ServiceTimerEventos();
 
 export default function Home() {
   //Context
@@ -24,11 +30,34 @@ export default function Home() {
   //State
   const [loading, setLoading] = useState(true);
   const [eventos, setEventos] = useState(null);
+  const [timerEventos, setTimerEventos] = useState(null);
+
+  const receiveMessage = (respuesta) => {
+    // this.state.segundos = respuesta.numero;
+    // this.state.hora = respuesta.hora
+    // this.setState({ segundos: this.state.segundos, hora: this.state.hora })
+    // this.timer(respuesta.numero);
+  }
 
   useEffect(() => {
     authContext.changePage("Timer");
-    getAllEventos();
+
+    if (authContext.user) {
+      getAllEventos();
+    }else{
+      getAllTimerEventos()
+    }
+
+    socket.on('cont', receiveMessage);
+
+    return () => {
+      socket.off("cont", receiveMessage);
+    }
   }, []);
+
+  const comenzar = () => {
+    console.log("Hola")
+  }
 
   const getAllEventos = () => {
     serviceEventos.getAllEventos().then((result) => {
@@ -36,6 +65,17 @@ export default function Home() {
       setLoading(false);
     });
   };
+
+  const getAllTimerEventos = () => {
+    serviceTimerEventos.getAllTimerEventos().then(result => {
+      setTimerEventos(result)
+      setLoading(false);
+    })
+  }
+
+  const editEvento = () => {
+    console.log("Hola")
+  }
 
   const listEventos = () => {
     return (
@@ -74,5 +114,9 @@ export default function Home() {
     );
   }
 
-  return <>{listEventos()}</>;
+  return( 
+  <>
+  {listEventos()}
+  <Button variant="contained" color="success" onClick={() => comenzar()}>Comenzar</Button>
+  </>);
 }
