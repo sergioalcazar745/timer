@@ -40,7 +40,7 @@ export default function Home() {
   const listEventos = () => {
     return (
       <List>
-        {loading == false &&
+        {loading == false && authContext.user &&
           eventos.map((evento, index) => {
             return (
               <ListItem
