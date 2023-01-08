@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import MenuItem from '@mui/material/MenuItem';
@@ -20,7 +20,7 @@ export default function Menu() {
   const authContext = useContext(AuthContext);
 
   const [open, setOpen] = useState(false)
-  const [anchorEl, setAnchorEl] = useState(null)
+  const [anchorEl, setAnchorEl] = useState(false)
 
   const toggleDrawer = (value) => {
     setOpen(value)
@@ -84,7 +84,8 @@ export default function Menu() {
                   horizontal: "right",
                 }}
                 open={Boolean(anchorEl)}
-                onClose={(e) => handleClose(e)}
+                onClose={handleClose}
+                onClick={handleClose}
               >
                 <MenuItem onClick={() => cerrarSesion()}>
                   Cerrar sesión

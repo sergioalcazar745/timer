@@ -7,10 +7,12 @@ import SalaService from './../../services/SalaService';
 import EmpresaService from './../../services/EmpresaService';
 import TemporizadorService from './../../services/TemporizadorService';
 import ServiceTiempoEmpresaSala from './../../services/ServiceTiemposEmpresasSalas';
+import CategoriaService from './../../services/CategoriaService';
 import useAlert from "./../../hooks/useAlert";
 
 const serviceSalas = new SalaService()
 const serviceTemporizadores = new TemporizadorService();
+const serviceCategorias = new CategoriaService();
 const serviceEmpresa = new EmpresaService();
 const serviceEvento = new EventoService();
 const serviceTiempoEmpresaSala = new ServiceTiempoEmpresaSala();
@@ -33,6 +35,7 @@ export default function Evento() {
     const [idSala, setIdSala] = useState(0);
     const [evento, setEvento] = useState(null)
     const [salas, setSalas] = useState(null)
+    const [categorias, setCategorias] = useState(null)
     const [empresas, setEmpresas] = useState(null)
     const [temporizadores, setTemporizadores] = useState(null)
 
@@ -74,29 +77,41 @@ export default function Evento() {
         })
     }
 
-    const getAllTemporizadores = (evento) => {
-        serviceTemporizadores.getAllTemporizadores().then(result => {
-            setTimer(result, evento)
-        })
-    }
-
     const getAllEmpresas = (evento) => {
         serviceEmpresa.getAllEmpresas().then(result => {
             setEmpresas(result)
-            getAllTemporizadores(evento)
+            getAllCategorias(evento)
         })
     }
 
-    const setTimer = (tempos, evento) => {
+    const getAllCategorias = (evento) => {
+        serviceCategorias.getAllCategorias().then(result => {
+            setCategorias(result)
+            getAllTemporizadores(evento, result)
+        })
+    }
+
+    const getAllTemporizadores = (evento, categorias) => {
+        serviceTemporizadores.getAllTemporizadores().then(result => {
+            setTimer(result, evento, categorias)
+        })
+    }
+
+    const setTimer = (tempos, evento, categorias) => {
         let aux = []
         for (let i = 0; i < tempos.length; i++) {
-            if (i + 1 < tempos.length) {
-                // contador: getTime(tempos[i+1].inicio, tempos[i].inicio)
-                aux.push({ id: tempos[i].idTemporizador, inicio: tempos[i].inicio.substring(tempos[i].inicio.indexOf("T") + 1, tempos[i].inicio.length - 3) })
-            } else if (i + 1 == tempos.length) {
-                aux.push({ id: tempos[i].idTemporizador, inicio: tempos[i].inicio.substring(tempos[i].inicio.indexOf("T") + 1, tempos[i].inicio.length - 3) })
+            for (let j = 0; j < categorias.length; j++) {
+                if(categorias[j].idCategoria == tempos[i].idCategoria && categorias[j].categoria == "WORK"){
+                    if (i + 1 < tempos.length) {
+                        // contador: getTime(tempos[i+1].inicio, tempos[i].inicio)
+                        aux.push({ id: tempos[i].idTemporizador, inicio: tempos[i].inicio.substring(tempos[i].inicio.indexOf("T") + 1, tempos[i].inicio.length - 3) })
+                    } else if (i + 1 == tempos.length) {
+                        aux.push({ id: tempos[i].idTemporizador, inicio: tempos[i].inicio.substring(tempos[i].inicio.indexOf("T") + 1, tempos[i].inicio.length - 3) })
+                    }
+                }                
             }
         }
+        console.log(aux)
         setTemporizadores(aux)
         setStatus(true)
     }
