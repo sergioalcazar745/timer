@@ -15,7 +15,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import EventoService from "./../services/EventoService";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -24,8 +24,10 @@ import TemporizadorService from './../services/TemporizadorService'
 import CategoriaService from './../services/CategoriaService'
 import SalaService from './../services/SalaService'
 import { Link } from "react-router-dom";
+import useDialog from './../hooks/useDialog';
 import './../assets/css/Clock.css'
 import io from "socket.io-client";
+import DialogUpdate from "../dialog/evento/dialogUpdate";
 
 const socket = io('http://localhost:4000/')
 
@@ -52,7 +54,14 @@ export default function Home() {
   //Context
   const authContext = useContext(AuthContext);
 
+  //Variable
   const open = true;
+
+  //Refs
+  const nombre = useRef();
+
+  //Dialog
+  const dialogUpdate = useDialog();
 
   //State
   const [loading, setLoading] = useState(true);
@@ -69,7 +78,7 @@ export default function Home() {
     console.log(resultado)
     let final = resultado.split(":")
     console.log(final)
-    setClock({ minutes: final[0], seconds: final[1] })
+    setClock({ inicio: respuesta.inicio, minutes: final[0], seconds: final[1] })
   }
 
   function secondsToMMSS(seconds) {
@@ -80,6 +89,10 @@ export default function Home() {
 
   useEffect(() => {
     authContext.changePage("Timer");
+    // if(localStorage.getItem('pausa')){
+    //   setClock(localStorage.getItem('pausa'))
+    //   console.log(localStorage.getItem('pausa'))
+    // }
     getAllEventos();
 
     socket.on('cont', receiveMessage);
@@ -102,6 +115,24 @@ export default function Home() {
       }
     }
     socket.emit('contador', aux);
+  }
+
+  const pausar = () => {
+    socket.emit('contador', 'pausa');
+    console.log(clock)
+    localStorage.setItem('pausa', clock)
+  }
+
+  const reanudar = () => {
+    socket.emit('contador', 'reanudar');
+  }
+
+  const updateEvento = () => {
+    setLoading(true)
+    serviceEventos.updateEvento({idEvento: eventos[0].idEvento, nombreEvento: nombre.current.value, inicioEvento: eventos[0].inicioEvento, finEvento: eventos[0].finEvento}).then(result => {
+      dialogUpdate.handleClose()
+      getAllEventos();
+    })
   }
 
   const getAllEventos = () => {
@@ -258,6 +289,8 @@ export default function Home() {
 
   const clockHTML = () => {
     return (
+      <>
+      <h2>{clock.inicio}</h2>
       <div className="clock">
         <div className="hours">
           <div className="first">
@@ -277,6 +310,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      </>
     )
   }
 
@@ -304,10 +338,14 @@ export default function Home() {
         </>
 
       }
-      <div style={{display: 'block'}}>
-        <Button variant="contained" color="success" onClick={() => comenzar()} style={{margin: 'auto', marginTop: '25px'}}>Comenzar</Button>
-        <Button variant="contained" color="success" onClick={() => editEvento()} style={{margin: 'auto', marginTop: '25px'}}>Editar evento</Button>
-      </div>
+      {authContext.user &&
+        <div style={{display: 'flex', justifyContent: 'center', alignContent: 'center', marginTop: '25px'}}>
+        <Button variant="contained" color="success" onClick={() => comenzar()}>Comenzar</Button>
+        <Button variant="contained" color="error" onClick={() => pausar()} sx={{marginLeft: '15px'}}>Pausar</Button>
+        <Button variant="contained" color="primary" onClick={() => reanudar()} sx={{marginLeft: '15px'}}>Reanudar</Button>
+        <Button variant="contained" color="warning" onClick={() => dialogUpdate.handleOpen()} sx={{marginLeft: '15px'}}>Editar evento</Button>
+        <DialogUpdate open={dialogUpdate.open} handleClose={dialogUpdate.handleClose} refc={nombre} updateEvento={updateEvento}/>
+      </div>}
       
     </>);
 }

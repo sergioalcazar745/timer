@@ -22,5 +22,15 @@ export default class EventoService{
             });
         });
     }
+
+    updateEvento(evento){
+        return new Promise(function(resolve){
+            var request = Global.url + "api/eventos";
+
+            axios.put(request, evento).then(() => {
+                resolve();
+            });
+        });
+    }
     
 }
