@@ -65,6 +65,7 @@ export default function Home() {
 
   //State
   const [loading, setLoading] = useState(true);
+  const [refresh, setRefresh] = useState(true);
   const [clock, setClock] = useState(null);
   const [eventos, setEventos] = useState(null);
   const [salas, setSalas] = useState(null);
@@ -89,6 +90,9 @@ export default function Home() {
 
   useEffect(() => {
     authContext.changePage("Timer");
+    localStorage.setItem("comenzar", true)
+    localStorage.setItem("pausar", false)
+    localStorage.setItem("reanudar", false)
     // if(localStorage.getItem('pausa')){
     //   setClock(localStorage.getItem('pausa'))
     //   console.log(localStorage.getItem('pausa'))
@@ -103,6 +107,8 @@ export default function Home() {
   }, []);
 
   const comenzar = () => {
+    localStorage.setItem("comenzar", false)
+    localStorage.setItem("pausar", true)
     let aux = []
 
     for (let i = 0; i < tempos.length; i++) {
@@ -118,18 +124,23 @@ export default function Home() {
   }
 
   const pausar = () => {
-    socket.emit('contador', 'pausa');
-    console.log(clock)
     localStorage.setItem('pausa', clock)
+    localStorage.setItem("pausar", false)
+    localStorage.setItem("reanudar", true)
+    setRefresh(!refresh)
+    socket.emit('pausa', 'pausa');
   }
 
   const reanudar = () => {
-    socket.emit('contador', 'reanudar');
+    localStorage.setItem("reanudar", false)
+    localStorage.setItem("pausar", true)
+    setRefresh(!refresh)
+    socket.emit('reanudar', 'reanudar');
   }
 
   const updateEvento = () => {
     setLoading(true)
-    serviceEventos.updateEvento({idEvento: eventos[0].idEvento, nombreEvento: nombre.current.value, inicioEvento: eventos[0].inicioEvento, finEvento: eventos[0].finEvento}).then(result => {
+    serviceEventos.updateEvento({ idEvento: eventos[0].idEvento, nombreEvento: nombre.current.value, inicioEvento: eventos[0].inicioEvento, finEvento: eventos[0].finEvento }).then(result => {
       dialogUpdate.handleClose()
       getAllEventos();
     })
@@ -253,7 +264,7 @@ export default function Home() {
 
   const tableEvento = () => {
     return (
-      <div style={{width: '80%', margin: 'auto', marginTop: '15px'}}>
+      <div style={{ width: '80%', margin: 'auto', marginTop: '15px' }}>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
             <TableHead>
@@ -289,28 +300,28 @@ export default function Home() {
 
   const clockHTML = () => {
     return (
-      <>
-      <h2>{clock.inicio}</h2>
-      <div className="clock">
-        <div className="hours">
-          <div className="first">
-            <div className="number">{clock.minutes[0]}</div>
+      <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+        <h2 style={{marginTop: '25px'}}>Hora de inicio: {clock.inicio}</h2>
+        <div className="clock" style={{marginTop: '25px'}}>
+          <div className="hours">
+            <div className="first">
+              <div className="number">{clock.minutes[0]}</div>
+            </div>
+            <div className="second">
+              <div className="number">{clock.minutes[1]}</div>
+            </div>
           </div>
-          <div className="second">
-            <div className="number">{clock.minutes[1]}</div>
-          </div>
-        </div>
-        <div className="tick">:</div>
-        <div className="minutes">
-          <div className="first">
-            <div className="number">{clock.seconds[0]}</div>
-          </div>
-          <div className="second">
-            <div className="number">{clock.seconds[1]}</div>
+          <div className="tick">:</div>
+          <div className="minutes">
+            <div className="first">
+              <div className="number">{clock.seconds[0]}</div>
+            </div>
+            <div className="second">
+              <div className="number">{clock.seconds[1]}</div>
+            </div>
           </div>
         </div>
       </div>
-      </>
     )
   }
 
@@ -339,13 +350,13 @@ export default function Home() {
 
       }
       {authContext.user &&
-        <div style={{display: 'flex', justifyContent: 'center', alignContent: 'center', marginTop: '25px'}}>
-        <Button variant="contained" color="success" onClick={() => comenzar()}>Comenzar</Button>
-        <Button variant="contained" color="error" onClick={() => pausar()} sx={{marginLeft: '15px'}}>Pausar</Button>
-        <Button variant="contained" color="primary" onClick={() => reanudar()} sx={{marginLeft: '15px'}}>Reanudar</Button>
-        <Button variant="contained" color="warning" onClick={() => dialogUpdate.handleOpen()} sx={{marginLeft: '15px'}}>Editar evento</Button>
-        <DialogUpdate open={dialogUpdate.open} handleClose={dialogUpdate.handleClose} refc={nombre} updateEvento={updateEvento}/>
-      </div>}
-      
+        <div style={{ display: 'flex', justifyContent: 'center', alignContent: 'center', marginTop: '25px' }}>
+          {localStorage.getItem('comenzar') == 'true' && <Button variant="contained" color="success" onClick={() => comenzar()}>Comenzar</Button>}
+          {localStorage.getItem('pausar') == 'true' && <Button variant="contained" color="error" onClick={() => pausar()} sx={{ marginLeft: '15px' }}>Pausar</Button>}
+          {localStorage.getItem('reanudar') == 'true' && <Button variant="contained" color="primary" onClick={() => reanudar()} sx={{ marginLeft: '15px' }}>Reanudar</Button>}
+          {localStorage.getItem('comenzar') == 'true' && <Button variant="contained" color="warning" onClick={() => dialogUpdate.handleOpen()} sx={{ marginLeft: '15px' }}>Editar evento</Button>}
+          <DialogUpdate open={dialogUpdate.open} handleClose={dialogUpdate.handleClose} refc={nombre} updateEvento={updateEvento} />
+        </div>}
+
     </>);
 }

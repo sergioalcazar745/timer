@@ -1,4 +1,5 @@
 import { Alert, Backdrop, Button, CircularProgress, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import $ from 'jquery';
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { AuthContext } from "../../context/AuthContext";
@@ -32,6 +33,7 @@ export default function Evento() {
 
     //State
     const [status, setStatus] = useState(false)
+    const [refresh, setRefresh] = useState(false)
     const [idSala, setIdSala] = useState(0);
     const [evento, setEvento] = useState(null)
     const [salas, setSalas] = useState(null)
@@ -48,6 +50,8 @@ export default function Evento() {
     }, [])
 
     const handleChangeSalas = (event) => {
+        // setRefresh(true)
+        // setRefresh(false)
         setIdSala(event.target.value)
     }
 
@@ -101,14 +105,14 @@ export default function Evento() {
         let aux = []
         for (let i = 0; i < tempos.length; i++) {
             for (let j = 0; j < categorias.length; j++) {
-                if(categorias[j].idCategoria == tempos[i].idCategoria && categorias[j].categoria == "WORK"){
+                if (categorias[j].idCategoria == tempos[i].idCategoria && categorias[j].categoria == "WORK") {
                     if (i + 1 < tempos.length) {
                         // contador: getTime(tempos[i+1].inicio, tempos[i].inicio)
                         aux.push({ id: tempos[i].idTemporizador, inicio: tempos[i].inicio.substring(tempos[i].inicio.indexOf("T") + 1, tempos[i].inicio.length - 3) })
                     } else if (i + 1 == tempos.length) {
                         aux.push({ id: tempos[i].idTemporizador, inicio: tempos[i].inicio.substring(tempos[i].inicio.indexOf("T") + 1, tempos[i].inicio.length - 3) })
                     }
-                }                
+                }
             }
         }
         console.log(aux)
@@ -153,7 +157,9 @@ export default function Evento() {
                         })
                     }
                 </Select>
+                {/* <Button variant='contained' color='error' sx={{ marginTop: '15px' }} onClick={() => }>Borrar datos</Button> */}
             </FormControl>
+            
         )
     }
 
@@ -167,6 +173,7 @@ export default function Evento() {
                     defaultValue={empresas[0].idEmpresa}
                     label="Age"
                     inputRef={empresa}
+                    className='selectEmpresas'
                 >
                     {
                         empresas != null &&
@@ -184,6 +191,7 @@ export default function Evento() {
         return (
             <>
                 {
+                    // refresh == false &&
                     temporizadores.map((temporizador, index) => {
                         return (
                             <div key={index} style={{ textAlign: 'center', marginTop: '30px' }}>
