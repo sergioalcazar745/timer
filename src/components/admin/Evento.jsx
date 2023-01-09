@@ -75,13 +75,13 @@ export default function Evento() {
             }
         }
         console.log(existe)
-        // if (existe == false) {
-        //     serviceTiempoEmpresaSala.postTiemposEmpresasSalas({ id: 0, idTimer: horas.current.value, idEmpresa: empresa.current.value, idSala: idSala, idEvento: id }).
-        //         then(result => {
-        //             alertSuccess.setMessage("Se ha insertado correctamente.")
-        //             alertSuccess.handleOpen()
-        //         })
-        // }
+        if (existe == false) {
+            serviceTiempoEmpresaSala.postTiemposEmpresasSalas({ id: 0, idTimer: horas.current.value, idEmpresa: empresa.current.value, idSala: idSala, idEvento: id }).
+                then(result => {
+                    alertSuccess.setMessage("Se ha insertado correctamente.")
+                    alertSuccess.handleOpen()
+                })
+        }
     }
 
     const getAllTiempoEmpresaSala = () => {
