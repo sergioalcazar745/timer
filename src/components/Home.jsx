@@ -27,7 +27,7 @@ import { Link } from "react-router-dom";
 import useDialog from './../hooks/useDialog';
 import './../assets/css/Clock.css'
 import io from "socket.io-client";
-import DialogUpdate from "../dialog/evento/dialogUpdate";
+import DialogUpdate from "../dialog/evento/DialogUpdate";
 
 const socket = io('http://localhost:4000/')
 
