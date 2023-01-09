@@ -31,12 +31,14 @@ export default function Evento() {
 
     //Alert
     const alertSuccess = useAlert();
+    const alertError = useAlert();
 
     //State
     const [status, setStatus] = useState(false)
     const [refresh, setRefresh] = useState(false)
     const [idSala, setIdSala] = useState(0);
     const [evento, setEvento] = useState(null)
+    const [tiempoSalas, setTiempoSalas] = useState(null)
     const [salas, setSalas] = useState(null)
     const [categorias, setCategorias] = useState(null)
     const [empresas, setEmpresas] = useState(null)
@@ -61,11 +63,32 @@ export default function Evento() {
         console.log("Timer" + horas.current.value)
         console.log("Sala" + idSala)
         console.log("Empresa" + empresa.current.value)
-        serviceTiempoEmpresaSala.postTiemposEmpresasSalas({ id: 0, idTimer: horas.current.value, idEmpresa: empresa.current.value, idSala: idSala, idEvento: id }).
-            then(result => {
-                alertSuccess.setMessage("Se ha insertado correctamente.")
-                alertSuccess.handleOpen()
-            })
+
+        let existe = false
+        for (let i = 0; i < tiempoSalas.length; i++) {
+            if (tiempoSalas[i].idTimer == horas.current.value &&
+                tiempoSalas[i].idSala == idSala &&
+                tiempoSalas[i].idEmpresa == empresa.current.value) {
+                alertError.setMessage("Ya existe en esa sala esa empresa a esa hora")
+                alertError.handleOpen();
+                existe = true
+            }
+        }
+        console.log(existe)
+        // if (existe == false) {
+        //     serviceTiempoEmpresaSala.postTiemposEmpresasSalas({ id: 0, idTimer: horas.current.value, idEmpresa: empresa.current.value, idSala: idSala, idEvento: id }).
+        //         then(result => {
+        //             alertSuccess.setMessage("Se ha insertado correctamente.")
+        //             alertSuccess.handleOpen()
+        //         })
+        // }
+    }
+
+    const getAllTiempoEmpresaSala = () => {
+        serviceTiempoEmpresaSala.getAllTiemposEmpresasSalas().then(result => {
+            setTiempoSalas(result)
+            setStatus(true)
+        })
     }
 
     const getByIdEvento = () => {
@@ -118,7 +141,7 @@ export default function Evento() {
         }
         console.log(aux)
         setTemporizadores(aux)
-        setStatus(true)
+        getAllTiempoEmpresaSala()
     }
 
     // const getTime = (time1, time2) => {
@@ -160,7 +183,7 @@ export default function Evento() {
                 </Select>
                 {/* <Button variant='contained' color='error' sx={{ marginTop: '15px' }} onClick={() => }>Borrar datos</Button> */}
             </FormControl>
-            
+
         )
     }
 
@@ -246,6 +269,11 @@ export default function Evento() {
             {alertSuccess.open && (
                 <Alert onClose={() => alertSuccess.handleClose()}>
                     {alertSuccess.message}
+                </Alert>
+            )}
+            {alertError.open && (
+                <Alert severity="error" onClose={() => alertError.handleClose()}>
+                    {alertError.message}
                 </Alert>
             )}
             {
