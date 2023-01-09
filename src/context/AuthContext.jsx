@@ -9,6 +9,7 @@ export function AuthContextProvider(props) {
 
   const login = (token) => {
     localStorage.setItem('token', token)
+    localStorage.setItem("comenzar", true)
     setUser(true)
   }
 

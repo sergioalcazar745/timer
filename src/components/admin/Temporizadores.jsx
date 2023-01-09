@@ -102,7 +102,7 @@ export default function Temporizadores() {
                                     <ListItemAvatar >
                                         <MeetingRoomIcon sx={{ color: "rgba(0, 0, 0, 0.54)" }} />
                                     </ListItemAvatar>
-                                    <ListItemText primary={temporizador.inicio} />
+                                    <ListItemText primary={temporizador.inicio.substring(0, temporizador.inicio.indexOf("T"))  + " / " + temporizador.inicio.substring(temporizador.inicio.indexOf("T") + 1, temporizador.inicio.length)} />
                                 </ListItemButton>
                             </ListItem>
                         )

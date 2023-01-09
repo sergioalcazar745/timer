@@ -90,7 +90,6 @@ export default function Home() {
 
   useEffect(() => {
     authContext.changePage("Timer");
-    localStorage.setItem("comenzar", true)
     localStorage.setItem("pausar", false)
     localStorage.setItem("reanudar", false)
     // if(localStorage.getItem('pausa')){
