@@ -67,9 +67,9 @@ export default function Evento() {
         let existe = false
         for (let i = 0; i < tiempoSalas.length; i++) {
             if (tiempoSalas[i].idTimer == horas.current.value &&
-                tiempoSalas[i].idSala == idSala &&
-                tiempoSalas[i].idEmpresa == empresa.current.value) {
+                tiempoSalas[i].idSala == idSala) {
                 alertError.setMessage("Ya existe en esa sala esa empresa a esa hora")
+                alertError.handleClose();
                 alertError.handleOpen();
                 existe = true
             }
@@ -79,7 +79,8 @@ export default function Evento() {
             serviceTiempoEmpresaSala.postTiemposEmpresasSalas({ id: 0, idTimer: horas.current.value, idEmpresa: empresa.current.value, idSala: idSala, idEvento: id }).
                 then(result => {
                     alertSuccess.setMessage("Se ha insertado correctamente.")
-                    alertSuccess.handleOpen()
+                    alertSuccess.handleOpen();
+                    alertError.handleClose();
                 })
         }
     }
