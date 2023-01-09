@@ -24,6 +24,7 @@ export default function Evento() {
 
     //Refs
     const empresa = useRef();
+    const horas = useRef();
 
     //Variable
     const open = true;
@@ -55,12 +56,12 @@ export default function Evento() {
         setIdSala(event.target.value)
     }
 
-    const postTiempoEmpresaSala = (idTemporizador) => {
+    const postTiempoEmpresaSala = () => {
         console.log("Evento" + id)
-        console.log("Timer" + idTemporizador)
+        console.log("Timer" + horas.current.value)
         console.log("Sala" + idSala)
         console.log("Empresa" + empresa.current.value)
-        serviceTiempoEmpresaSala.postTiemposEmpresasSalas({ id: 0, idTimer: idTemporizador, idEmpresa: empresa.current.value, idSala: idSala, idEvento: id }).
+        serviceTiempoEmpresaSala.postTiemposEmpresasSalas({ id: 0, idTimer: horas.current.value, idEmpresa: empresa.current.value, idSala: idSala, idEvento: id }).
             then(result => {
                 alertSuccess.setMessage("Se ha insertado correctamente.")
                 alertSuccess.handleOpen()
@@ -163,6 +164,29 @@ export default function Evento() {
         )
     }
 
+    const selectHoras = () => {
+        return (
+            <FormControl variant="standard" sx={{ ml: 2, mt: 2, minWidth: 120, maxWidth: '50%', width: '100%' }}>
+                <InputLabel id="demo-simple-select-standard-label">Horas</InputLabel>
+                <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    defaultValue={temporizadores[0].id}
+                    label="Age"
+                    inputRef={horas}
+                    className='selectEmpresas'
+                >
+                    {
+                        temporizadores != null &&
+                        temporizadores.map((temporizador, index) => {
+                            return <MenuItem key={temporizador.id} value={temporizador.id}>{temporizador.inicio}</MenuItem>
+                        })
+                    }
+                </Select>
+            </FormControl>
+        )
+    }
+
     const selectEmpresas = (idTemporizador) => {
         return (
             <FormControl variant="standard" sx={{ ml: 2, mt: 2, minWidth: 120, maxWidth: '50%', width: '100%' }}>
@@ -182,30 +206,29 @@ export default function Evento() {
                         })
                     }
                 </Select>
-                <Button variant='contained' color='info' sx={{ marginTop: '15px' }} onClick={() => postTiempoEmpresaSala(idTemporizador)}>Añadir</Button>
             </FormControl>
         )
     }
 
-    const horasEmpresas = () => {
-        return (
-            <>
-                {
-                    // refresh == false &&
-                    temporizadores.map((temporizador, index) => {
-                        return (
-                            <div key={index} style={{ textAlign: 'center', marginTop: '30px' }}>
-                                <h3>{temporizador.inicio}</h3>
-                                {
-                                    selectEmpresas(temporizador.id)
-                                }
-                            </div>
-                        )
-                    })
-                }
-            </>
-        )
-    }
+    // const horasEmpresas = () => {
+    //     return (
+    //         <>
+    //             {
+    //                 // refresh == false &&
+    //                 temporizadores.map((temporizador, index) => {
+    //                     return (
+    //                         <div key={index} style={{ textAlign: 'center', marginTop: '30px' }}>
+    //                             <h3>{temporizador.inicio}</h3>
+    //                             {
+    //                                 selectEmpresas(temporizador.id)
+    //                             }
+    //                         </div>
+    //                     )
+    //                 })
+    //             }
+    //         </>
+    //     )
+    // }
 
     if (!status) {
         return (
@@ -232,7 +255,11 @@ export default function Evento() {
 
             {
                 (status) && (idSala != 0) &&
-                horasEmpresas()
+                <>
+                    {selectEmpresas()}
+                    {selectHoras()}
+                    <Button variant='contained' color='info' sx={{ marginTop: '15px' }} onClick={() => postTiempoEmpresaSala()}>Añadir</Button>
+                </>
             }
 
         </>

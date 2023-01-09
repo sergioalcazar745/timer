@@ -58,11 +58,13 @@ export default function Temporizadores() {
     }
 
     const addTemporizador = () => {
+        setStatus(true)
         serviceTemporizadores.postTemporizador({idTemporizador:0, inicio: fechaHora.current.value, idCategoria: categoria.current.value, pausa: false}).then(() => {
             getAllTemporizadores();
             dialogAdd.handleClose()
             alertSuccess.setMessage("Se ha añadido correctamente");
             alertSuccess.handleOpen();
+            setStatus(false)
         })
     }
 

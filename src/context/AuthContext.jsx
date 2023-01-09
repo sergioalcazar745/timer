@@ -25,6 +25,8 @@ export function AuthContextProvider(props) {
   useEffect(() => {
     if(!localStorage.getItem('token')){
       setUser(false)
+    }else{
+      localStorage.setItem("comenzar", true)
     }
   }, []);
 
