@@ -29,7 +29,7 @@ import './../assets/css/Clock.css'
 import io from "socket.io-client";
 import DialogUpdate from "../dialog/evento/DialogUpdate";
 
-const socket = io('http://localhost:4000/')
+const socket = io('https://hookstimers.azurewebsites.net/')
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };

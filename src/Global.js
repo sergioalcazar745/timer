@@ -1,5 +1,5 @@
 var Global = {
-    url: "https://localhost:7004/"
+    url: "https://apitimers2023.azurewebsites.net/"
 }
 
 export default Global;
