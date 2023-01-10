@@ -44,18 +44,20 @@ export default function Login() {
             service
                 .getToken(data)
                 .then((result) => {
-                    console.log(result)
                 if(result!="error"){
+
                     // localStorage.setItem("token", result);
                     authContext.login(result)
                     setStatus(true)
                     localStorage.setItem("comienzo", "comienzo");
-                }else{
+
+                    }else{
+                    setLoading(false)
                     var mensajeError = "No se ha encontrado el usuario";
                     setMensajeError(mensajeError);
                     localStorage.removeItem("token");
-                    setLoading(false)
-                }
+                    }
+
                 });
         }
     };
