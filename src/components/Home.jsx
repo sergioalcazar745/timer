@@ -29,7 +29,7 @@ import './../assets/css/Clock.css'
 import io from "socket.io-client";
 import DialogUpdate from "../dialog/evento/dialogUpdate";
 
-const socket = io('http://localhost:4000/')
+const socket = io('https://hookstimers.azurewebsites.net/')
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -90,12 +90,17 @@ export default function Home() {
 
   useEffect(() => {
     authContext.changePage("Timer");
-    localStorage.setItem("pausar", false)
-    localStorage.setItem("reanudar", false)
-    // if(localStorage.getItem('pausa')){
-    //   setClock(localStorage.getItem('pausa'))
-    //   console.log(localStorage.getItem('pausa'))
-    // }
+    if(localStorage.getItem("pausar") == "true" || localStorage.getItem("reanudar") == "true"){
+      // setClock(localStorage.getItem('pausa'))
+      // console.log(localStorage.getItem('pausa'))
+      localStorage.getItem('comenzar', false)
+      console.log("Hola")
+    }else{
+      console.log("HOla")
+      localStorage.getItem('comenzar', true)
+      localStorage.setItem("pausar", false)
+      localStorage.setItem("reanudar", false)
+    }
     getAllEventos();
 
     socket.on('cont', receiveMessage);

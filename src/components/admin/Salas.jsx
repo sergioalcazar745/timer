@@ -7,7 +7,7 @@ import { Fab, Zoom, CircularProgress, List, ListItem, ListItemButton, ListItemAv
 import AddIcon from '@mui/icons-material/Add';
 import SalaService from './../../services/SalaService';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
-import DialogAdd from "../../dialog/salas/dialogAdd";
+import DialogAdd from "../../dialog/salas/DialogAdd";
 import DialogUpdate from "../../dialog/salas/DialogUpdate";
 
 const serviceSalas = new SalaService()

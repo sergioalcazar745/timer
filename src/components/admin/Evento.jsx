@@ -190,6 +190,7 @@ export default function Evento() {
 
     const selectHoras = () => {
         return (
+            <center>
             <FormControl variant="standard" sx={{ ml: 2, mt: 2, minWidth: 120, maxWidth: '50%', width: '100%' }}>
                 <InputLabel id="demo-simple-select-standard-label">Horas</InputLabel>
                 <Select
@@ -208,11 +209,13 @@ export default function Evento() {
                     }
                 </Select>
             </FormControl>
+            </center>
         )
     }
 
     const selectEmpresas = (idTemporizador) => {
         return (
+            <center>
             <FormControl variant="standard" sx={{ ml: 2, mt: 2, minWidth: 120, maxWidth: '50%', width: '100%' }}>
                 <InputLabel id="demo-simple-select-standard-label">Empresa</InputLabel>
                 <Select
@@ -231,6 +234,7 @@ export default function Evento() {
                     }
                 </Select>
             </FormControl>
+            </center>
         )
     }
 
@@ -287,7 +291,9 @@ export default function Evento() {
                 <>
                     {selectEmpresas()}
                     {selectHoras()}
+                    <center>
                     <Button variant='contained' color='info' sx={{ marginTop: '15px' }} onClick={() => postTiempoEmpresaSala()}>Añadir</Button>
+                    </center>
                 </>
             }
 

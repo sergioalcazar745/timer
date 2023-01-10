@@ -11,8 +11,7 @@ export default class LoginService {
                 resolve(response.data)
             })
             .catch(error=>{
-                
-                throw new(error)
+                resolve("error")
             });
         });
     }
